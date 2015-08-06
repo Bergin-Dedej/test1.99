@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,6 +97,7 @@ public class Client {
 		// and have a thread call the IncomingReader method
 		try {
 			datagramSocket = new DatagramSocket();
+
 			sock = new Socket("192.168.2.26", 5000);
 			outputStream = new ObjectOutputStream(sock.getOutputStream());
 			inputStream = new ObjectInputStream(sock.getInputStream());
@@ -358,12 +360,16 @@ public class Client {
 					while (true) {
 						System.out.println("in the while loop");
 						buf = "fromClient".getBytes();
-						InetAddress address = InetAddress.getByName("localhost");
+						InetAddress address = InetAddress.getByName("192.168.2.26");
 						DatagramPacket packet = new DatagramPacket(buf,buf.length,address,7777);
-						datagramSocket.send(packet);
+						for(int i = 0; i<3;i++){
+							datagramSocket.send(packet);
+						}
 						System.out.println("after sending");
 						packet = new DatagramPacket(buf2, buf2.length);
-						datagramSocket.receive(packet);
+							datagramSocket.receive(packet);
+
+
 						
 						System.out.println("after receiving");
 						

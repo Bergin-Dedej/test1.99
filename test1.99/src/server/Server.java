@@ -251,6 +251,7 @@ public class Server {
 			
 			try {
 				datagramSocket = new DatagramSocket(7777);
+				
 			} catch (SocketException e) {
 				e.printStackTrace();
 			}
@@ -293,6 +294,7 @@ public class Server {
 				ArrayList<InetAddress> addresses = new ArrayList<InetAddress>();
 				ArrayList<Integer> ports = new ArrayList<Integer>();
 				
+				
 				while(true){
 					sleepDelay(50);
 					
@@ -302,24 +304,32 @@ public class Server {
 						byte[] buf = new byte[512];
 						
 						packet = new DatagramPacket(buf,buf.length);
+						System.out.println("before receiving");
 						datagramSocket.receive(packet);
+						System.out.println("after receiving");
 						
 						address = packet.getAddress();
 						port = packet.getPort();
+					
+						System.out.println(address);
+						
 						
 						if(!(addresses.contains(address) && ports.contains(port))){
 							addresses.add(address);
 							ports.add(port);
 						}
-						
+					
 						byte[] buf2 = new byte[512];
 						buf2 = messenger.getBytes();
-						
+					
 						for(int i=0; i<ports.size();i++){
 							System.out.println("sending to:" + addresses.get(i));
 							packet = new DatagramPacket(buf2,buf2.length, addresses.get(i), ports.get(i));
+							System.out.println("before sending");
 							datagramSocket.send(packet);
+							System.out.println("after sending");
 						}
+					
 						
 					}catch(Exception e){
 						
