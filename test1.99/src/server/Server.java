@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -36,7 +37,7 @@ public class Server {
 	ArrayList<String> deltaMessages;
 	ArrayList<Boolean> deltaCrosses;
 	
-	private String messenger;
+	private String messenger = "";
 	
 	public String getMessenger() {
 		return messenger;
@@ -294,9 +295,9 @@ public class Server {
 				ArrayList<InetAddress> addresses = new ArrayList<InetAddress>();
 				ArrayList<Integer> ports = new ArrayList<Integer>();
 				
-				
 				while(true){
 					sleepDelay(50);
+					
 					
 					moveEveryone();
 					fillMessenger();
@@ -315,24 +316,28 @@ public class Server {
 						
 						
 						if(!(addresses.contains(address) && ports.contains(port))){
+							System.out.println("incrementing address and ports");
 							addresses.add(address);
 							ports.add(port);
 						}
 					
 						byte[] buf2 = new byte[512];
 						buf2 = messenger.getBytes();
-					
+						
+						System.out.println("before for loop");
 						for(int i=0; i<ports.size();i++){
-							System.out.println("sending to:" + addresses.get(i));
+							System.out.println("sending to:" + addresses.get(i) + " " + ports.get(i) + " i:" + i);
 							packet = new DatagramPacket(buf2,buf2.length, addresses.get(i), ports.get(i));
 							System.out.println("before sending");
 							datagramSocket.send(packet);
 							System.out.println("after sending");
 						}
-					
-						
-					}catch(Exception e){
-						
+					}
+					catch(UnsupportedEncodingException e){
+					         System.out.println("Unsupported character set");
+					}	
+					catch(Exception e){
+						e.printStackTrace();
 					}
 					
 					

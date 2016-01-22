@@ -98,7 +98,7 @@ public class Client {
 		try {
 			datagramSocket = new DatagramSocket();
 
-			sock = new Socket("192.168.2.26", 5000);
+			sock = new Socket("192.168.2.21", 5000);
 			outputStream = new ObjectOutputStream(sock.getOutputStream());
 			inputStream = new ObjectInputStream(sock.getInputStream());
 			
@@ -360,11 +360,12 @@ public class Client {
 					while (true) {
 						System.out.println("in the while loop");
 						buf = "fromClient".getBytes();
-						InetAddress address = InetAddress.getByName("192.168.2.26");
+						InetAddress address = InetAddress.getByName("192.168.2.21");
+						
 						DatagramPacket packet = new DatagramPacket(buf,buf.length,address,7777);
-						for(int i = 0; i<3;i++){
-							datagramSocket.send(packet);
-						}
+						//InetAddress address = packet.getAddress();
+						datagramSocket.send(packet);
+						
 						System.out.println("after sending");
 						packet = new DatagramPacket(buf2, buf2.length);
 							datagramSocket.receive(packet);
